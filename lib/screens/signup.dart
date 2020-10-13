@@ -1,3 +1,5 @@
+import 'package:e_commercial/screens/login.dart';
+import 'package:e_commercial/utils.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -8,13 +10,6 @@ class SignUp extends StatefulWidget {
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 bool passwordVisible = false;
-
-bool validateEmail(String value) {
-  Pattern pattern =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  RegExp regex = new RegExp(pattern);
-  return (!regex.hasMatch(value)) ? false : true;
-}
 
 class _SignUpState extends State<SignUp> {
   void validation() {
@@ -157,6 +152,13 @@ class _SignUpState extends State<SignUp> {
                             width: 10,
                           ),
                           GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (ctx) => Login(),
+                                ),
+                              );
+                            },
                             child: Text(
                               'Login',
                               style: TextStyle(
