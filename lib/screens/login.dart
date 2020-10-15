@@ -1,6 +1,11 @@
-import 'package:e_commercial/screens/signup.dart';
+import 'package:e_commercial/screens/sign_up.dart';
 import 'package:e_commercial/utils.dart';
+import 'package:e_commercial/widgets/centered_title.dart';
+import 'package:e_commercial/widgets/change_screen.dart';
+import 'package:e_commercial/widgets/my_text_form_field.dart';
+import 'package:e_commercial/widgets/password_form_field.dart';
 import 'package:flutter/material.dart';
+import '../widgets/my_button.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -9,7 +14,7 @@ class Login extends StatefulWidget {
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-bool passwordVisible = false;
+bool obscurePassword = false;
 
 class _LoginState extends State<Login> {
   void validation() {
@@ -19,6 +24,65 @@ class _LoginState extends State<Login> {
     } else {
       print('No');
     }
+  }
+
+  Widget _buildAllForm() {
+    return Container(
+      height: 300,
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          CenteredTitle(text: 'Login'),
+          MyTextFormField(
+            hint: 'Email',
+            validator: (value) {
+              if (value.isEmpty) {
+                return "Please fill email";
+              } else if (!validateEmail(value)) {
+                return "Email is invalid";
+              } else {
+                return "";
+              }
+            },
+          ),
+          PasswordFormField(
+            hint: 'Password',
+            obscurePassword: obscurePassword,
+            validator: (value) {
+              if (value == "") {
+                return "Please fill password";
+              } else if (value.length < 8) {
+                return "Password is too short";
+              } else {
+                return "";
+              }
+            },
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              setState(() {
+                obscurePassword = !obscurePassword;
+              });
+            },
+          ),
+          MyButton(
+            onPressed: () => validation(),
+            name: 'Login',
+          ),
+          ChangeScreen(
+            name: 'SignUp',
+            whichScreen: 'I have not account!',
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (ctx) => SignUp(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -31,96 +95,7 @@ class _LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                height: 300,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Login',
-                      style:
-                          TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-                    ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "Please fill email";
-                        } else if (!validateEmail(value)) {
-                          return "Email is invalid";
-                        } else {
-                          return "";
-                        }
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Email',
-                        hintStyle: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    TextFormField(
-                      obscureText: passwordVisible,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "Please fill password";
-                        } else if (value.length < 8) {
-                          return "Password is too short";
-                        } else {
-                          return "";
-                        }
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Password',
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            FocusScope.of(context).unfocus();
-                            setState(() {
-                              passwordVisible = !passwordVisible;
-                            });
-                          },
-                          child: Icon(
-                            passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Colors.black,
-                          ),
-                        ),
-                        hintStyle: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    Container(
-                      height: 45,
-                      width: double.infinity,
-                      child: RaisedButton(
-                          child: Text('Login'),
-                          color: Colors.grey,
-                          onPressed: () => validation()),
-                    ),
-                    Row(
-                      children: [
-                        Text('I have not account!'),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (ctx) => SignUp(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'SignUp',
-                            style: TextStyle(color: Colors.cyan, fontSize: 20),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              _buildAllForm(),
             ],
           ),
         ),
